@@ -118,15 +118,16 @@ export default function Home() {
         //   "_blank"
         // );
 
-        const link = document.createElement("a");
-      link.href =
-        "https://docs.google.com/forms/d/e/1FAIpQLScTq0QypO9is1tY_rLnrZiYXoEQxXR9EYcAkDMyEGV5RZtzdw/viewform?usp=send_form";
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+        //   const link = document.createElement("a");
+        // link.href =
+        //   "https://docs.google.com/forms/d/e/1FAIpQLScTq0QypO9is1tY_rLnrZiYXoEQxXR9EYcAkDMyEGV5RZtzdw/viewform?usp=send_form";
+        // link.target = "_blank";
+        // link.rel = "noopener noreferrer";
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link);
 
+        window.location.href =  "https://docs.google.com/forms/d/e/1FAIpQLScTq0QypO9is1tY_rLnrZiYXoEQxXR9EYcAkDMyEGV5RZtzdw/viewform?usp=send_form";
 
         // Reset password field
         setPasswords((prev) => ({
@@ -312,61 +313,60 @@ export default function Home() {
               // </div>
 
               <div
-              key={user.id}
-              style={{
-                backgroundColor: "white",
-                padding: "20px",
-                borderRadius: "16px",
-                boxShadow: "0 4px 15px rgba(0,0,0,0.04)",
-                width: "200px",
-                opacity: "0.6",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <img
-                src={user.imagePath || "/placeholder.svg"}
-                alt={user.name}
+                key={user.id}
                 style={{
-                  width: "90px",
-                  height: "90px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  border: "2px solid #9ca3af",
-                  filter: "grayscale(0.7)",
-                }}
-              />
-              <div
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "18px",
-                  marginTop: "12px",
-                  color: "#1f2937",
+                  backgroundColor: "white",
+                  padding: "20px",
+                  borderRadius: "16px",
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.04)",
+                  width: "200px",
+                  opacity: "0.6",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
               >
-                {user.id}
+                <img
+                  src={user.imagePath || "/placeholder.svg"}
+                  alt={user.name}
+                  style={{
+                    width: "90px",
+                    height: "90px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    border: "2px solid #9ca3af",
+                    filter: "grayscale(0.7)",
+                  }}
+                />
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "18px",
+                    marginTop: "12px",
+                    color: "#1f2937",
+                  }}
+                >
+                  {user.id}
+                </div>
+                <div
+                  style={{
+                    fontSize: "15px",
+                    color: "#374151",
+                    marginTop: "5px",
+                  }}
+                >
+                  Calls:
+                </div>
+                <div
+                  style={{
+                    fontSize: "13px",
+                    color: "#6b7280",
+                    marginTop: "3px",
+                  }}
+                >
+                  Last call:
+                </div>
               </div>
-              <div
-                style={{
-                  fontSize: "15px",
-                  color: "#374151",
-                  marginTop: "5px",
-                }}
-              >
-                Calls:
-              </div>
-              <div
-                style={{
-                  fontSize: "13px",
-                  color: "#6b7280",
-                  marginTop: "3px",
-                }}
-              >
-                Last call: 
-              </div>
-            </div>
-
             ))}
           </div>
         </>
