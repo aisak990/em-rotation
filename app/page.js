@@ -1,100 +1,100 @@
-"use client"
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
+"use client";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const [users, setUsers] = useState([])
-  const [activeUsers, setActiveUsers] = useState([])
-  const [inactiveUsers, setInactiveUsers] = useState([])
-  const [passwords, setPasswords] = useState({})
-  const [loading, setLoading] = useState(true)
-  const [currentTime, setCurrentTime] = useState(new Date())
-  const router = useRouter()
+  const [users, setUsers] = useState([]);
+  const [activeUsers, setActiveUsers] = useState([]);
+  const [inactiveUsers, setInactiveUsers] = useState([]);
+  const [passwords, setPasswords] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const router = useRouter();
 
   useEffect(() => {
-    fetchData()
+    fetchData();
 
     // Update time every second
     const timer = setInterval(() => {
-      setCurrentTime(new Date())
-    }, 1000)
+      setCurrentTime(new Date());
+    }, 1000);
 
-    return () => clearInterval(timer)
-  }, [])
+    return () => clearInterval(timer);
+  }, []);
 
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/users")
-      const data = await response.json()
+      const response = await fetch("/api/users");
+      const data = await response.json();
 
       if (data.users) {
-        setUsers(data.users)
+        setUsers(data.users);
 
         // Initialize password state
-        const initialPasswords = {}
+        const initialPasswords = {};
         data.users.forEach((user) => {
-          initialPasswords[user.id] = ""
-        })
-        setPasswords(initialPasswords)
+          initialPasswords[user.id] = "";
+        });
+        setPasswords(initialPasswords);
 
         // Separate active and inactive users
-        const active = data.users.filter((user) => user.active)
-        const inactive = data.users.filter((user) => !user.active)
+        const active = data.users.filter((user) => user.active);
+        const inactive = data.users.filter((user) => !user.active);
 
-        setActiveUsers(active)
-        setInactiveUsers(inactive)
+        setActiveUsers(active);
+        setInactiveUsers(inactive);
       }
 
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      console.error("Error fetching data:", error)
-      setLoading(false)
+      console.error("Error fetching data:", error);
+      setLoading(false);
     }
-  }
+  };
 
   const formatTimeDifference = (timestamp) => {
-    if (!timestamp) return "0h 0m 0s ago"
+    if (!timestamp) return "0h 0m 0s ago";
 
-    const now = currentTime
-    const callTime = new Date(timestamp)
-    const diffInSeconds = Math.floor((now - callTime) / 1000)
+    const now = currentTime;
+    const callTime = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - callTime) / 1000);
 
-    const hours = Math.floor(diffInSeconds / 3600)
-    const minutes = Math.floor((diffInSeconds % 3600) / 60)
-    const seconds = diffInSeconds % 60
+    const hours = Math.floor(diffInSeconds / 3600);
+    const minutes = Math.floor((diffInSeconds % 3600) / 60);
+    const seconds = diffInSeconds % 60;
 
-    return `${hours}h ${minutes}m ${seconds}s ago`
-  }
+    return `${hours}h ${minutes}m ${seconds}s ago`;
+  };
 
   const formatTimeAsNext = (timestamp, startTime) => {
-    if (!timestamp || !startTime) return "0h 0m 0s"
+    if (!timestamp || !startTime) return "0h 0m 0s";
 
-    const now = currentTime
-    const nextTime = new Date(timestamp)
-    const startTimeDate = new Date(startTime)
+    const now = currentTime;
+    const nextTime = new Date(timestamp);
+    const startTimeDate = new Date(startTime);
 
     // Calculate elapsed time since becoming next
-    const elapsedInSeconds = Math.floor((now - startTimeDate) / 1000)
+    const elapsedInSeconds = Math.floor((now - startTimeDate) / 1000);
 
-    const hours = Math.floor(elapsedInSeconds / 3600)
-    const minutes = Math.floor((elapsedInSeconds % 3600) / 60)
-    const seconds = elapsedInSeconds % 60
+    const hours = Math.floor(elapsedInSeconds / 3600);
+    const minutes = Math.floor((elapsedInSeconds % 3600) / 60);
+    const seconds = elapsedInSeconds % 60;
 
-    return `${hours}h ${minutes}m ${seconds}s`
-  }
+    return `${hours}h ${minutes}m ${seconds}s`;
+  };
 
   const handlePasswordChange = (userId, value) => {
     setPasswords((prev) => ({
       ...prev,
       [userId]: value,
-    }))
-  }
+    }));
+  };
 
   const handleTakeCall = async (userId) => {
     if (!passwords[userId]) {
-      alert("Please enter your password")
-      return
+      alert("Please enter your password");
+      return;
     }
 
     try {
@@ -107,39 +107,44 @@ export default function Home() {
           userId,
           password: passwords[userId],
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.success) {
+        // Open Google Form in a new window
+        window.open(
+          "https://docs.google.com/forms/d/e/1FAIpQLScTq0QypO9is1tY_rLnrZiYXoEQxXR9EYcAkDMyEGV5RZtzdw/viewform?usp=send_form",
+          "_blank"
+        );
+
         // Reset password field
         setPasswords((prev) => ({
           ...prev,
           [userId]: "",
-        }))
+        }));
 
         // Refresh data
-        fetchData()
 
-        // Open Google Form in a new window
-        window.open(
-          "https://docs.google.com/forms/d/e/1FAIpQLScTq0QypO9is1tY_rLnrZiYXoEQxXR9EYcAkDMyEGV5RZtzdw/viewform?usp=send_form",
-          "_blank",
-        )
+        fetchData();
       } else {
-        alert(data.message || "Invalid password")
+        alert(data.message || "Invalid password");
       }
     } catch (error) {
-      console.error("Error taking call:", error)
-      alert("An error occurred. Please try again.")
+      console.error("Error taking call:", error);
+      alert("An error occurred. Please try again.");
     }
-  }
+  };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
   }
 
-  const nextUpUser = activeUsers.length > 0 ? activeUsers[0] : null
+  const nextUpUser = activeUsers.length > 0 ? activeUsers[0] : null;
 
   return (
     <div className="bg-gray-100 min-h-screen pb-8">
@@ -172,7 +177,9 @@ export default function Home() {
       {nextUpUser && (
         <div className="p-4">
           <div className="border-2 border-green-500 rounded-lg p-4 bg-white">
-            <div className="text-center text-green-500 font-medium mb-2">NEXT UP</div>
+            <div className="text-center text-green-500 font-medium mb-2">
+              NEXT UP
+            </div>
             <div className="flex flex-col items-center">
               <div className="relative w-20 h-20 mb-2">
                 <div className="absolute inset-0 rounded-full border-4 border-green-500"></div>
@@ -187,9 +194,15 @@ export default function Home() {
                 </div>
               </div>
               <div className="text-xl font-medium">{nextUpUser.id}</div>
-              <div className="text-sm text-gray-600 mb-1">Calls: {nextUpUser.calls}</div>
+              <div className="text-sm text-gray-600 mb-1">
+                Calls: {nextUpUser.calls}
+              </div>
               <div className="text-sm text-gray-600 mb-4">
-                Time as Next: {formatTimeAsNext(nextUpUser.nextUpTimestamp, nextUpUser.becameNextAt)}
+                Time as Next:{" "}
+                {formatTimeAsNext(
+                  nextUpUser.nextUpTimestamp,
+                  nextUpUser.becameNextAt
+                )}
               </div>
 
               <input
@@ -197,7 +210,9 @@ export default function Home() {
                 placeholder="Password"
                 className="w-full border rounded-md p-2 mb-3"
                 value={passwords[nextUpUser.id] || ""}
-                onChange={(e) => handlePasswordChange(nextUpUser.id, e.target.value)}
+                onChange={(e) =>
+                  handlePasswordChange(nextUpUser.id, e.target.value)
+                }
               />
 
               <button
@@ -215,7 +230,10 @@ export default function Home() {
       <div className="px-1">
         <div className="flex justify-between w-full">
           {activeUsers.slice(1).map((user) => (
-            <div key={user.id} className="bg-white rounded-lg p-1 flex flex-col items-center w-[24%] mx-0.5">
+            <div
+              key={user.id}
+              className="bg-white rounded-lg p-1 flex flex-col items-center w-[24%] mx-0.5"
+            >
               <div className="w-11 h-11 mb-1 relative rounded-full overflow-hidden">
                 <Image
                   src={user.imagePath || "/placeholder.svg"}
@@ -226,7 +244,9 @@ export default function Home() {
                 />
               </div>
               <div className="text-sm font-medium">{user.id}</div>
-              <div className="text-[10px] text-gray-600">Calls: {user.calls}</div>
+              <div className="text-[10px] text-gray-600">
+                Calls: {user.calls}
+              </div>
               <div className="text-[10px] text-gray-600 mb-1">
                 Last call: {formatTimeDifference(user.lastCallTimestamp)}
               </div>
@@ -263,7 +283,10 @@ export default function Home() {
 
           <div className="px-4 grid grid-cols-2 gap-4">
             {inactiveUsers.map((user) => (
-              <div key={user.id} className="bg-white rounded-lg p-4 flex flex-col items-center">
+              <div
+                key={user.id}
+                className="bg-white rounded-lg p-4 flex flex-col items-center"
+              >
                 <div className="w-16 h-16 mb-2 relative rounded-full overflow-hidden">
                   <Image
                     src={user.imagePath || "/placeholder.svg"}
@@ -274,7 +297,9 @@ export default function Home() {
                   />
                 </div>
                 <div className="text-lg font-medium">{user.id}</div>
-                <div className="text-xs text-gray-600 mb-1">Calls: {user.calls}</div>
+                <div className="text-xs text-gray-600 mb-1">
+                  Calls: {user.calls}
+                </div>
                 <div className="text-xs text-gray-600 mb-2">
                   Last call: {formatTimeDifference(user.lastCallTimestamp)}
                 </div>
@@ -284,6 +309,5 @@ export default function Home() {
         </>
       )}
     </div>
-  )
+  );
 }
-
