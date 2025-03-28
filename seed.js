@@ -1,25 +1,28 @@
 import { MongoClient } from "mongodb";
-import { NextResponse } from "next/server";
 
 const MONGO_URI = "mongodb+srv://itzbasatmaqsood:mj6THfVfpSn4CXW6@cluster0.1usflgg.mongodb.net/Client?retryWrites=true&w=majority&appName=Cluster0";
 const DB_NAME = "Client";
 
-export async function GET() {
+async function initializeOrder() {
   const client = new MongoClient(MONGO_URI);
-
+  
   try {
     await client.connect();
     const db = client.db(DB_NAME);
     const usersCollection = db.collection("users");
 
-    // Fetch users sorted by order
-    const users = await usersCollection.find({}).sort({ order: 1 }).toArray();
+    const users = await usersCollection.find({}).toArray();
 
-    return NextResponse.json({ users });
+    for (let i = 0; i < users.length; i++) {
+      await usersCollection.updateOne({ id: users[i].id }, { $set: { order: i } });
+    }
+
+    console.log("User order initialized successfully.");
   } catch (error) {
-    console.error("Error fetching users:", error);
-    return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
+    console.error("Error initializing user order:", error);
   } finally {
     await client.close();
   }
 }
+
+initializeOrder();

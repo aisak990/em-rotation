@@ -1,71 +1,72 @@
-import { promises as fs } from "fs"
-import path from "path"
-import { NextResponse } from "next/server"
+import { MongoClient } from "mongodb";
+import { NextResponse } from "next/server";
+
+const MONGO_URI = "mongodb+srv://itzbasatmaqsood:mj6THfVfpSn4CXW6@cluster0.1usflgg.mongodb.net/Client?retryWrites=true&w=majority&appName=Cluster0";
+const DB_NAME = "Client";
 
 export async function POST(request) {
-  try {
-    const { userId, password } = await request.json()
+  const client = new MongoClient(MONGO_URI);
 
-    // Read the current data
-    const dataDirectory = path.join(process.cwd(), "data")
-    const fileContents = await fs.readFile(dataDirectory + "/data.json", "utf8")
-    const data = JSON.parse(fileContents)
+  try {
+    await client.connect();
+    const db = client.db(DB_NAME);
+    const usersCollection = db.collection("users");
+
+    const { userId, password } = await request.json();
 
     // Find the user
-    const userIndex = data.users.findIndex((user) => user.id === userId)
+    let user = await usersCollection.findOne({ id: userId });
 
-    if (userIndex === -1) {
-      return NextResponse.json({ success: false, message: "User not found" }, { status: 404 })
+    if (!user) {
+      return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
     }
-
-    const user = data.users[userIndex]
 
     // Verify password
     if (user.password !== password) {
-      return NextResponse.json({ success: false, message: "Invalid password" }, { status: 401 })
+      return NextResponse.json({ success: false, message: "Invalid password" }, { status: 401 });
     }
 
     // Update user data
-    const now = new Date().toISOString()
+    const now = new Date().toISOString();
+    await usersCollection.updateOne(
+      { id: userId },
+      { $inc: { calls: 1 }, $set: { lastCallTimestamp: now, active: true } }
+    );
 
-    user.calls += 1
-    user.lastCallTimestamp = now
+    // Fetch updated user
+    user = await usersCollection.findOne({ id: userId });
 
-    // Reorder users for rotation
-    // Remove the user from their current position
-    data.users.splice(userIndex, 1)
+    // Get all users, sorted by order
+    const allUsers = await usersCollection.find({}).sort({ order: 1 }).toArray();
 
-    // Add the user to the end of the active users
-    const activeUsers = data.users.filter((u) => u.active)
-    const inactiveUsers = data.users.filter((u) => !u.active)
+    // Separate active and inactive users
+    const activeUsers = allUsers.filter((u) => u.active && u.id !== userId);
+    const inactiveUsers = allUsers.filter((u) => !u.active);
 
-    // If the user was inactive, make them active
-    if (!user.active) {
-      user.active = true
+    // Reorder users: move the calling user to the end of active users
+    const updatedUsers = [...activeUsers, user, ...inactiveUsers];
+
+    // Update `becameNextAt` and `nextUpTimestamp` for the first active user
+    if (updatedUsers.length > 0 && updatedUsers[0].active) {
+      const futureDate = new Date();
+      futureDate.setHours(futureDate.getHours() + 30); // 30 hours in the future
+
+      await usersCollection.updateOne(
+        { id: updatedUsers[0].id },
+        { $set: { becameNextAt: now, nextUpTimestamp: futureDate.toISOString() } }
+      );
     }
 
-    // Recombine the arrays with the user at the end of active users
-    data.users = [...activeUsers, user, ...inactiveUsers]
-
-    // Update the nextUpTimestamp for the new first user
-    if (data.users.length > 0 && data.users[0].active) {
-      // Set the current time as when this user became next
-      data.users[0].becameNextAt = now
-
-      // Set a future timestamp for when they'll no longer be next
-      // This is just for demonstration - in a real app you might have specific rules
-      const futureDate = new Date()
-      futureDate.setHours(futureDate.getHours() + 30) // 30 hours in the future
-      data.users[0].nextUpTimestamp = futureDate.toISOString()
+    // Save the reordered users back to MongoDB with updated order values
+    for (const [index, u] of updatedUsers.entries()) {
+      await usersCollection.updateOne({ id: u.id }, { $set: { order: index } });
     }
 
-    // Write the updated data back to the file
-    await fs.writeFile(dataDirectory + "/data.json", JSON.stringify(data, null, 2))
-
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error processing call:", error)
-    return NextResponse.json({ success: false, message: "Server error" }, { status: 500 })
+    console.error("Error processing call:", error);
+    return NextResponse.json({ success: false, message: "Server error" }, { status: 500 });
+  } finally {
+    await client.close();
   }
 }
-
