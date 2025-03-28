@@ -1,0 +1,7 @@
+{
+  "extends": "next/core-web-js-compat",
+  "rules": {
+    "react/no-unescaped-entities": "off"
+  }
+}
+

@@ -1,0 +1,64 @@
+{
+  "users": [
+    {
+      "id": "K93",
+      "password": "password93",
+      "calls": 21,
+      "becameNextAt": "2025-03-28T17:57:17.471Z",
+      "nextUpTimestamp": "2025-03-29T23:57:17.471Z",
+      "lastCallTimestamp": "2025-03-28T17:45:58.354Z",
+      "active": true,
+      "imagePath": "/images/k93.jpg"
+    },
+    {
+      "id": "K95",
+      "password": "password95",
+      "calls": 9,
+      "becameNextAt": "2025-03-28T17:45:58.354Z",
+      "nextUpTimestamp": "2025-03-29T23:45:58.354Z",
+      "lastCallTimestamp": "2025-03-28T17:46:17.899Z",
+      "active": true,
+      "imagePath": "/images/k95.jpg"
+    },
+    {
+      "id": "K97",
+      "password": "password97",
+      "calls": 23,
+      "becameNextAt": "2025-03-28T17:44:49.535Z",
+      "nextUpTimestamp": "2025-03-29T23:44:49.536Z",
+      "lastCallTimestamp": "2025-03-28T17:56:45.445Z",
+      "active": true,
+      "imagePath": "/images/k97.jpg"
+    },
+    {
+      "id": "K96",
+      "password": "password96",
+      "calls": 11,
+      "becameNextAt": "2025-03-28T17:56:45.445Z",
+      "nextUpTimestamp": "2025-03-29T23:56:45.446Z",
+      "lastCallTimestamp": "2025-03-28T17:56:58.896Z",
+      "active": true,
+      "imagePath": "/images/k96.jpg"
+    },
+    {
+      "id": "K94",
+      "password": "password94",
+      "calls": 12,
+      "becameNextAt": "2025-03-28T17:56:58.896Z",
+      "nextUpTimestamp": "2025-03-29T23:56:58.896Z",
+      "lastCallTimestamp": "2025-03-28T17:57:17.471Z",
+      "active": true,
+      "imagePath": "/images/k94.jpg"
+    },
+    {
+      "id": "K91",
+      "password": "password91",
+      "calls": 0,
+      "becameNextAt": "",
+      "nextUpTimestamp": "",
+      "lastCallTimestamp": "2025-03-28T10:23:00.000Z",
+      "active": false,
+      "imagePath": "/images/k91.jpg"
+    }
+  ]
+}
