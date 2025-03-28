@@ -1,8 +1,8 @@
 import { MongoClient } from "mongodb";
 import { NextResponse } from "next/server";
 
-const MONGO_URI = "mongodb+srv://itzbasatmaqsood:mj6THfVfpSn4CXW6@cluster0.1usflgg.mongodb.net/Client?retryWrites=true&w=majority&appName=Cluster0";
-const DB_NAME = "Client";
+const MONGO_URI = "mongodb+srv://aisak:B0cQu1knBTYYF0Zq@cluster0.rjlin0p.mongodb.net/Rotation?retryWrites=true&w=majority&appName=Cluster0";
+const DB_NAME = "Rotation";
 
 export async function GET() {
   const client = new MongoClient(MONGO_URI);
