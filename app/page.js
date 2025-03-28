@@ -283,27 +283,84 @@ export default function Home() {
 
           <div className="px-4 grid grid-cols-2 gap-4">
             {inactiveUsers.map((user) => (
+              // <div
+              //   key={user.id}
+              //   className="bg-white rounded-lg p-4 flex flex-col items-center"
+              // >
+              //   <div className="w-16 h-16 mb-2 relative rounded-full overflow-hidden">
+              //     <Image
+              //       src={user.imagePath || "/placeholder.svg"}
+              //       alt={user.id}
+              //       width={64}
+              //       height={64}
+              //       className="object-cover w-full h-full border-2 border-gray-300"
+              //     />
+              //   </div>
+              //   <div className="text-lg font-medium">{user.id}</div>
+              //   {/* <div className="text-xs text-gray-600 mb-1">
+              //     Calls: {user.calls}
+              //   </div>
+              //   <div className="text-xs text-gray-600 mb-2">
+              //     Last call: {formatTimeDifference(user.lastCallTimestamp)}
+              //   </div> */}
+              // </div>
+
               <div
-                key={user.id}
-                className="bg-white rounded-lg p-4 flex flex-col items-center"
+              key={user.id}
+              style={{
+                backgroundColor: "white",
+                padding: "20px",
+                borderRadius: "16px",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.04)",
+                width: "200px",
+                opacity: "0.6",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={user.imagePath || "/placeholder.svg"}
+                alt={user.name}
+                style={{
+                  width: "90px",
+                  height: "90px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  border: "2px solid #9ca3af",
+                  filter: "grayscale(0.7)",
+                }}
+              />
+              <div
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                  marginTop: "12px",
+                  color: "#1f2937",
+                }}
               >
-                <div className="w-16 h-16 mb-2 relative rounded-full overflow-hidden">
-                  <Image
-                    src={user.imagePath || "/placeholder.svg"}
-                    alt={user.id}
-                    width={64}
-                    height={64}
-                    className="object-cover w-full h-full border-2 border-gray-300"
-                  />
-                </div>
-                <div className="text-lg font-medium">{user.id}</div>
-                <div className="text-xs text-gray-600 mb-1">
-                  Calls: {user.calls}
-                </div>
-                <div className="text-xs text-gray-600 mb-2">
-                  Last call: {formatTimeDifference(user.lastCallTimestamp)}
-                </div>
+                {user.name}
               </div>
+              <div
+                style={{
+                  fontSize: "15px",
+                  color: "#374151",
+                  marginTop: "5px",
+                }}
+              >
+                Calls:
+              </div>
+              <div
+                style={{
+                  fontSize: "13px",
+                  color: "#6b7280",
+                  marginTop: "3px",
+                }}
+              >
+                Last call: 
+              </div>
+            </div>
+
             ))}
           </div>
         </>
