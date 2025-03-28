@@ -345,7 +345,7 @@ export default function Home() {
                   color: "#1f2937",
                 }}
               >
-                {user.name}
+                {user.id}
               </div>
               <div
                 style={{
