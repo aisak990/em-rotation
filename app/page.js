@@ -113,10 +113,20 @@ export default function Home() {
 
       if (data.success) {
         // Open Google Form in a new window
-        window.open(
-          "https://docs.google.com/forms/d/e/1FAIpQLScTq0QypO9is1tY_rLnrZiYXoEQxXR9EYcAkDMyEGV5RZtzdw/viewform?usp=send_form",
-          "_blank"
-        );
+        // window.open(
+        //   "https://docs.google.com/forms/d/e/1FAIpQLScTq0QypO9is1tY_rLnrZiYXoEQxXR9EYcAkDMyEGV5RZtzdw/viewform?usp=send_form",
+        //   "_blank"
+        // );
+
+        const link = document.createElement("a");
+      link.href =
+        "https://docs.google.com/forms/d/e/1FAIpQLScTq0QypO9is1tY_rLnrZiYXoEQxXR9EYcAkDMyEGV5RZtzdw/viewform?usp=send_form";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
 
         // Reset password field
         setPasswords((prev) => ({
