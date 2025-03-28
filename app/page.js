@@ -197,12 +197,8 @@ export default function Home() {
               <div className="text-sm text-gray-600 mb-1">
                 Calls: {nextUpUser.calls}
               </div>
-              <div className="text-sm text-gray-600 mb-4">
-                Time as Next:{" "}
-                {formatTimeAsNext(
-                  nextUpUser.nextUpTimestamp,
-                  nextUpUser.becameNextAt
-                )}
+              <div className="text-[10px] text-gray-600 mb-1">
+                Last call: {formatTimeDifference(nextUpUser.lastCallTimestamp)}
               </div>
 
               <input
